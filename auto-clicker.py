@@ -3,6 +3,8 @@ import threading
 from pynput.mouse import Controller, Button
 from pynput.keyboard import Listener, KeyCode
 
+LEFT_CLICK_INTERVAL = 1.0
+
 TOGGLE_KEY = KeyCode(char="*")
 
 clicking = False
@@ -12,7 +14,7 @@ def clicker():
     while True:
         if clicking:
             mouse.click(Button.left, 1)
-            time.sleep(0.001)
+            time.sleep(LEFT_CLICK_INTERVAL)
 
 def toggle_event(key):
     if key == TOGGLE_KEY:
