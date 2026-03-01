@@ -3,7 +3,7 @@ import threading
 from pynput.mouse import Controller, Button
 from pynput.keyboard import GlobalHotKeys
 
-LEFT_CLICK_INTERVAL = 1.0
+LEFT_CLICK_INTERVAL = 1.5
 ENABLE_RIGHT_HOLD = False
 
 clicking = False
