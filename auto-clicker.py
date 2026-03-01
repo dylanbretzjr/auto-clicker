@@ -79,13 +79,13 @@ def exit_script():
 
 root = tk.Tk()
 root.title("Auto-Clicker")
-root.geometry("300x300")
+root.geometry("500x300")
 root.attributes("-topmost", True)
 
 font_title = ("Helvetica", 16, "bold")
 font_normal = ("Helvetica", 12)
 
-tk.Label(root, text="Auto-Clicker", font=font_title).pack(pady=10)
+tk.Label(root, text="Minecraft AFK Auto-Clicker", font=font_title).pack(pady=(15, 5))
 
 # Interval input
 interval_frame = tk.Frame(root)
@@ -111,12 +111,12 @@ right_hold_label.pack()
 # Hotkey instructions
 instructions = (
     "Hotkeys:\n"
-    "  `Ctrl+Shift+T`: Toggle Left-Clicking\n"
-    "  `Ctrl+Shift+R`: Toggle Right-Hold\n"
-    "  `Ctrl+Shift+X`: Exit"
+    "Ctrl+Shift+T — Toggle Clicker\n"
+    "Ctrl+Shift+R — Toggle Right-Hold\n"
+    "Ctrl+Shift+X — Exit"
 )
 
-tk.Label(root, text=instructions, font=font_normal, justify="left").pack(pady=15)
+tk.Label(root, text=instructions, font=font_normal, justify="left").pack(pady=(15, 5))
 
 # --- Start background threads ---
 
