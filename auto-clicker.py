@@ -33,11 +33,15 @@ def sync_mouse_state():
 
 def update_ui():
     """Update GUI elements based on current state."""
-    status_var.set("RUNNING" if clicking else "STOPPED")
-    status_label.config(fg="green" if clicking else "red")
+    if clicking:
+        click_toggle_btn.config(text="Left-Click: RUNNING", fg="green")
+    else:
+        click_toggle_btn.config(text="Left-Click: STOPPED", fg="red")
 
-    right_hold_var.set("ON" if ENABLE_RIGHT_HOLD else "OFF")
-    right_hold_label.config(fg="green" if ENABLE_RIGHT_HOLD else "red")
+    if ENABLE_RIGHT_HOLD:
+        right_hold_toggle_btn.config(text="Right-Hold: ON", fg="green")
+    else:
+        right_hold_toggle_btn.config(text="Right-Hold: OFF", fg="red")
 
 def toggle_clicking():
     """Toggle auto-clicker on or off."""
@@ -46,6 +50,15 @@ def toggle_clicking():
 
     sync_mouse_state()
     root.after(0, update_ui)
+
+def gui_toggle_clicking():
+    """
+    Toggle auto-clicker via GUI button with 3-second delay."""
+    if not clicking:
+        click_toggle_btn.config(text="Starting in 3s...", fg="orange")
+        root.after(3000, toggle_clicking)
+    else:
+        toggle_clicking()
 
 def toggle_right_hold():
     """Toggle hold right-click on or off."""
@@ -96,20 +109,15 @@ interval_var = tk.StringVar(value=str(LEFT_CLICK_INTERVAL))
 interval_var.trace_add("write", update_interval)
 tk.Entry(interval_frame, textvariable=interval_var, width=5, justify="center").pack(side=tk.LEFT, padx=5)
 
-# Status variables
-status_var = tk.StringVar(value="STOPPED")
-right_hold_var = tk.StringVar(value="OFF")
+# Interactive buttons
+button_frame = tk.Frame(root)
+button_frame.pack(pady=5)
 
-status_frame = tk.Frame(root)
-status_frame.pack(pady=10)
+click_toggle_btn = tk.Button(button_frame, text="Left-Click: STOPPED", fg="red", font=font_title, width=18, command=gui_toggle_clicking)
+click_toggle_btn.pack(pady=5)
 
-tk.Label(status_frame, text="Status:", font=font_normal).grid(row=0, column=0, sticky="e", padx=5, pady=2)
-status_label = tk.Label(status_frame, textvariable=status_var, font=font_title, fg="red")
-status_label.grid(row=0, column=1, sticky="w", padx=5, pady=2)
-
-tk.Label(status_frame, text="Right-Hold Mode:", font=font_normal).grid(row=1, column=0, sticky="e", padx=5, pady=2)
-right_hold_label = tk.Label(status_frame, textvariable=right_hold_var, font=font_title, fg="red")
-right_hold_label.grid(row=1, column=1, sticky="w", padx=5, pady=2)
+right_hold_toggle_btn = tk.Button(button_frame, text="Right-Hold: OFF", fg="red", font=font_title, width=18, command=toggle_right_hold)
+right_hold_toggle_btn.pack(pady=5)
 
 # Separator
 tk.Frame(root, height=1, bg="#444444").pack(fill=tk.X, padx=30, pady=10)
