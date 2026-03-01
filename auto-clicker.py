@@ -59,12 +59,14 @@ hotkeys = {
     '<ctrl>+<shift>+x': exit_script
 }
 
-print("--- Auto Clicker ---")
+print("\n--- Auto Clicker ---\n")
+
 print("Listening for hotkeys...")
 print("  Press `Ctrl+Shift+T` to toggle left-clicking.")
 print("  Press `Ctrl+Shift+R` to toggle right-hold mode.")
 print("  Press `Ctrl+Shift+X` to exit.")
-print(f"  Right Hold feature is {'ON' if ENABLE_RIGHT_HOLD else 'OFF'}\n")
+
+print(f"\nRight-hold mode is {'ON' if ENABLE_RIGHT_HOLD else 'OFF'}\n")
 
 with GlobalHotKeys(hotkeys) as listener:
     listener.join()
