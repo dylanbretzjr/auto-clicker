@@ -1,0 +1,5 @@
+name: auto_click
+channels:
+  - defaults
+dependencies:
+  - python=3.12
