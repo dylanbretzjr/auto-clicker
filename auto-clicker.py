@@ -93,38 +93,37 @@ def exit_script():
 
 root = tk.Tk()
 root.title("Auto-Clicker")
-root.geometry("500x300")
+root.geometry("400x300")
 root.attributes("-topmost", True)
 
 font_title = ("Helvetica", 18, "bold")
 font_button = ("Helvetica", 16, "bold")
 font_normal = ("Helvetica", 14)
 
-tk.Label(root, text="Minecraft AFK Auto-Clicker", font=font_title).pack(pady=(15, 5))
+tk.Label(root, text="Minecraft AFK Auto-Clicker", font=font_title).pack(pady=(15, 0))
+
+# Control frame
+control_frame = tk.Frame(root)
+control_frame.pack(pady=15)
 
 # Interval input
-interval_frame = tk.Frame(root)
-interval_frame.pack(pady=(15, 5))
-tk.Label(interval_frame, text="Left-click interval (seconds):", font=font_normal).pack(side=tk.LEFT)
-
+tk.Label(control_frame, text="Left-click interval (seconds):", font=font_normal).grid(row=0, column=0, sticky="e", padx=10, pady=5)
 interval_var = tk.StringVar(value=str(LEFT_CLICK_INTERVAL))
 interval_var.trace_add("write", update_interval)
-tk.Entry(interval_frame, textvariable=interval_var, width=5, justify="center").pack(side=tk.LEFT, padx=5)
+tk.Entry(control_frame, textvariable=interval_var, width=5, justify="center", font=font_normal).grid(row=0, column=1, sticky="w", padx=10, pady=5)
 
-# Interactive buttons
-button_frame = tk.Frame(root)
-button_frame.pack(pady=5)
+# Clicker toggle
+tk.Label(control_frame, text="Toggle clicker:", font=font_normal).grid(row=1, column=0, sticky="e", padx=10, pady=5)
+click_toggle_btn = tk.Button(control_frame, text="OFF", fg="red", font=font_button, width=4, command=gui_toggle_clicking)
+click_toggle_btn.grid(row=1, column=1, sticky="w", padx=10, pady=5)
 
-tk.Label(button_frame, text="Toggle clicker:", font=font_normal).grid(row=0, column=0, sticky="e", padx=10, pady=5)
-click_toggle_btn = tk.Button(button_frame, text="OFF", fg="red", font=font_button, width=4, command=gui_toggle_clicking)
-click_toggle_btn.grid(row=0, column=1, sticky="w", padx=10, pady=5)
-
-tk.Label(button_frame, text="Toggle right-hold:", font=font_normal).grid(row=1, column=0, sticky="e", padx=10, pady=5)
-right_hold_toggle_btn = tk.Button(button_frame, text="OFF", fg="red", font=font_button, width=4, command=toggle_right_hold)
-right_hold_toggle_btn.grid(row=1, column=1, sticky="w", padx=10, pady=5)
+# Right-hold toggle
+tk.Label(control_frame, text="Toggle right-hold:", font=font_normal).grid(row=2, column=0, sticky="e", padx=10, pady=5)
+right_hold_toggle_btn = tk.Button(control_frame, text="OFF", fg="red", font=font_button, width=4, command=toggle_right_hold)
+right_hold_toggle_btn.grid(row=2, column=1, sticky="w", padx=10, pady=5)
 
 # Separator
-tk.Frame(root, height=1, bg="#444444").pack(fill=tk.X, padx=30, pady=10)
+tk.Frame(root, height=1, bg="#444444").pack(fill=tk.X, padx=30)
 
 # Hotkey instructions
 instructions = (
@@ -134,7 +133,7 @@ instructions = (
     "Ctrl+Shift+X — Exit"
 )
 
-tk.Label(root, text=instructions, font=font_normal, justify="left").pack(pady=(10, 5))
+tk.Label(root, text=instructions, font=font_normal, justify="left").pack(pady=(15, 5))
 
 # --- Start background threads ---
 
