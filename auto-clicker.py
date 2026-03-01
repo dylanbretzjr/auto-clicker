@@ -1,7 +1,10 @@
 import time
 import threading
+import tkinter as tk
 from pynput.mouse import Controller, Button
 from pynput.keyboard import GlobalHotKeys, Listener
+
+# --- Configuration ---
 
 LEFT_CLICK_INTERVAL = 1.5
 ENABLE_RIGHT_HOLD = False
@@ -9,7 +12,11 @@ ENABLE_RIGHT_HOLD = False
 clicking = False
 mouse = Controller()
 
+# --- Core logic ---
+
 def clicker():
+    """Background thread to handle clicking."""
+    global LEFT_CLICK_INTERVAL
     while True:
         if clicking:
             mouse.click(Button.left, 1)
@@ -28,7 +35,8 @@ def toggle_clicking():
         else:
             mouse.release(Button.right)
   
-    print(f"Auto-clicker: {'RUNNING' if clicking else 'STOPPED'}")
+    status_var.set("RUNNING" if clicking else "STOPPED")
+    status_label.config(fg="green" if clicking else "red")
 
 def toggle_right_hold():
     """Toggle hold right-click on or off."""
@@ -41,14 +49,68 @@ def toggle_right_hold():
         else:
             mouse.release(Button.right)
 
-    print(f"Right-Hold mode: {'ON' if ENABLE_RIGHT_HOLD else 'OFF'}")
+    right_hold_var.set("ON" if ENABLE_RIGHT_HOLD else "OFF")
+    right_hold_label.config(fg="green" if ENABLE_RIGHT_HOLD else "red")
+
+def update_interval(*args):
+    """Dynamically updates the click speed when typed into the GUI."""
+    global LEFT_CLICK_INTERVAL
+    try:
+        LEFT_CLICK_INTERVAL = float(interval_var.get())
+    except ValueError:
+        pass
 
 def exit_script():
     """Exit auto-clicker."""
-    print("Exiting script...")
     if clicking and ENABLE_RIGHT_HOLD:
         mouse.release(Button.right)
+    root.after(0, root.destroy)
     raise Listener.StopException
+
+# --- GUI setup ---
+
+root = tk.Tk()
+root.title("Auto-Clicker")
+root.geometry("300x300")
+root.attributes("-topmost", True)
+
+font_title = ("Helvetica", 16, "bold")
+font_normal = ("Helvetica", 12)
+
+tk.Label(root, text="Auto-Clicker", font=font_title).pack(pady=10)
+
+# Interval input
+interval_frame = tk.Frame(root)
+interval_frame.pack(pady=5)
+tk.Label(interval_frame, text="Click Interval (seconds):", font=font_normal).pack(side=tk.LEFT)
+
+interval_var = tk.StringVar(value=str(LEFT_CLICK_INTERVAL))
+interval_var.trace_add("write", update_interval)
+tk.Entry(interval_frame, textvariable=interval_var, width=5, justify="center").pack(side=tk.LEFT, padx=5)
+
+# Status variables
+status_var = tk.StringVar(value="STOPPED")
+right_hold_var = tk.StringVar(value="OFF")
+
+tk.Label(root, text="Status:", font=font_normal).pack(pady=(15, 0))
+status_label = tk.Label(root, textvariable=status_var, font=font_title, fg="red")
+status_label.pack()
+
+tk.Label(root, text="Right-Hold Mode:", font=font_normal).pack(pady=(10, 0))
+right_hold_label = tk.Label(root, textvariable=right_hold_var, font=font_title, fg="red")
+right_hold_label.pack()
+
+# Hotkey instructions
+instructions = (
+    "Hotkeys:\n"
+    "  `Ctrl+Shift+T`: Toggle Left-Clicking\n"
+    "  `Ctrl+Shift+R`: Toggle Right-Hold\n"
+    "  `Ctrl+Shift+X`: Exit"
+)
+
+tk.Label(root, text=instructions, font=font_normal, justify="left").pack(pady=15)
+
+# --- Start background threads ---
 
 click_thread = threading.Thread(target=clicker, daemon=True)
 click_thread.start()
@@ -59,14 +121,8 @@ hotkeys = {
     '<ctrl>+<shift>+x': exit_script
 }
 
-print("\n--- Auto-Clicker ---\n")
+listener = GlobalHotKeys(hotkeys)
+listener.start()
 
-print("Listening for hotkeys...")
-print("  Press `Ctrl+Shift+T` to toggle left-clicking.")
-print("  Press `Ctrl+Shift+R` to toggle right-hold mode.")
-print("  Press `Ctrl+Shift+X` to exit.")
-
-print(f"\nRight-hold mode is {'ON' if ENABLE_RIGHT_HOLD else 'OFF'}\n")
-
-with GlobalHotKeys(hotkeys) as listener:
-    listener.join()
+# Start GUI loop
+root.mainloop()
