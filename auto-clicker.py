@@ -56,6 +56,8 @@ def gui_toggle_clicking():
     Toggle auto-clicker via GUI button with 3-second delay."""
     if not clicking:
         click_toggle_btn.config(text="Starting in 3s...", fg="orange")
+        root.after(1000, lambda: click_toggle_btn.config(text="Starting in 2s...", fg="orange"))
+        root.after(2000, lambda: click_toggle_btn.config(text="Starting in 1s...", fg="orange"))
         root.after(3000, toggle_clicking)
     else:
         toggle_clicking()
