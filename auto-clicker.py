@@ -93,12 +93,14 @@ def exit_script():
 
 root = tk.Tk()
 root.title("Auto-Clicker")
-root.geometry("400x300")
+root.geometry("400x320")
 root.attributes("-topmost", True)
 
 font_title = ("Helvetica", 18, "bold")
 font_button = ("Helvetica", 16, "bold")
 font_normal = ("Helvetica", 14)
+font_bold = ("Helvetica", 14, "bold")
+
 
 tk.Label(root, text="Minecraft AFK Auto-Clicker", font=font_title).pack(pady=(15, 0))
 
@@ -126,14 +128,19 @@ right_hold_toggle_btn.grid(row=2, column=1, sticky="w", padx=10, pady=5)
 tk.Frame(root, height=1, bg="#444444").pack(fill=tk.X, padx=30)
 
 # Hotkey instructions
-instructions = (
-    "Hotkeys:\n"
-    "Ctrl+Shift+T — Toggle clicker\n"
-    "Ctrl+Shift+R — Toggle right-hold\n"
-    "Ctrl+Shift+X — Exit"
-)
+hotkey_frame = tk.Frame(root)
+hotkey_frame.pack(pady=(15, 5))
 
-tk.Label(root, text=instructions, font=font_normal, justify="left").pack(pady=(15, 5))
+tk.Label(hotkey_frame, text="Hotkeys:", font=font_bold).grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 5))
+
+tk.Label(hotkey_frame, text="Ctrl+Shift+T", font=font_normal).grid(row=1, column=0, sticky="e", padx=(0, 5))
+tk.Label(hotkey_frame, text=":  Toggle clicker", font=font_normal).grid(row=1, column=1, sticky="w")
+
+tk.Label(hotkey_frame, text="Ctrl+Shift+R", font=font_normal).grid(row=2, column=0, sticky="e", padx=(0, 5))
+tk.Label(hotkey_frame, text=":  Toggle right-hold", font=font_normal).grid(row=2, column=1, sticky="w")
+
+tk.Label(hotkey_frame, text="Ctrl+Shift+X", font=font_normal).grid(row=3, column=0, sticky="e", padx=(0, 5))
+tk.Label(hotkey_frame, text=":  Exit", font=font_normal).grid(row=3, column=1, sticky="w")
 
 # --- Start background threads ---
 
