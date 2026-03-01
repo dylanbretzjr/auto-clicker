@@ -1,7 +1,7 @@
 import time
 import threading
 from pynput.mouse import Controller, Button
-from pynput.keyboard import GlobalHotKeys
+from pynput.keyboard import GlobalHotKeys, Listener
 
 LEFT_CLICK_INTERVAL = 1.5
 ENABLE_RIGHT_HOLD = False
@@ -48,7 +48,7 @@ def exit_script():
     print("Exiting script...")
     if clicking and ENABLE_RIGHT_HOLD:
         mouse.release(Button.right)
-    return False
+    raise Listener.StopException
 
 click_thread = threading.Thread(target=clicker, daemon=True)
 click_thread.start()
