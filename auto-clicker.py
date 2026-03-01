@@ -89,8 +89,8 @@ tk.Label(root, text="Minecraft AFK Auto-Clicker", font=font_title).pack(pady=(15
 
 # Interval input
 interval_frame = tk.Frame(root)
-interval_frame.pack(pady=5)
-tk.Label(interval_frame, text="Click Interval (seconds):", font=font_normal).pack(side=tk.LEFT)
+interval_frame.pack(pady=(15, 0))
+tk.Label(interval_frame, text="Left-click interval (seconds):", font=font_normal).pack(side=tk.LEFT)
 
 interval_var = tk.StringVar(value=str(LEFT_CLICK_INTERVAL))
 interval_var.trace_add("write", update_interval)
@@ -100,13 +100,19 @@ tk.Entry(interval_frame, textvariable=interval_var, width=5, justify="center").p
 status_var = tk.StringVar(value="STOPPED")
 right_hold_var = tk.StringVar(value="OFF")
 
-tk.Label(root, text="Status:", font=font_normal).pack(pady=(15, 0))
-status_label = tk.Label(root, textvariable=status_var, font=font_title, fg="red")
-status_label.pack()
+status_frame = tk.Frame(root)
+status_frame.pack(pady=10)
 
-tk.Label(root, text="Right-Hold Mode:", font=font_normal).pack(pady=(10, 0))
-right_hold_label = tk.Label(root, textvariable=right_hold_var, font=font_title, fg="red")
-right_hold_label.pack()
+tk.Label(status_frame, text="Status:", font=font_normal).grid(row=0, column=0, sticky="e", padx=5, pady=2)
+status_label = tk.Label(status_frame, textvariable=status_var, font=font_title, fg="red")
+status_label.grid(row=0, column=1, sticky="w", padx=5, pady=2)
+
+tk.Label(status_frame, text="Right-Hold Mode:", font=font_normal).grid(row=1, column=0, sticky="e", padx=5, pady=2)
+right_hold_label = tk.Label(status_frame, textvariable=right_hold_var, font=font_title, fg="red")
+right_hold_label.grid(row=1, column=1, sticky="w", padx=5, pady=2)
+
+#
+tk.Frame(root, height=1, bg="#444444").pack(fill=tk.X, padx=30, pady=10)
 
 # Hotkey instructions
 instructions = (
@@ -116,7 +122,7 @@ instructions = (
     "Ctrl+Shift+X — Exit"
 )
 
-tk.Label(root, text=instructions, font=font_normal, justify="left").pack(pady=(15, 5))
+tk.Label(root, text=instructions, font=font_normal, justify="left").pack(pady=(10, 5))
 
 # --- Start background threads ---
 
