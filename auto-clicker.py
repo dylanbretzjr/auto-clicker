@@ -24,46 +24,54 @@ def clicker():
         else:
             time.sleep(0.01)
 
+def sync_mouse_state():
+    """Ensure mouse state matches toggle settings."""
+    if clicking and ENABLE_RIGHT_HOLD:
+        mouse.press(Button.right)
+    else:
+        mouse.release(Button.right)
+
+def update_ui():
+    """Update GUI elements based on current state."""
+    status_var.set("RUNNING" if clicking else "STOPPED")
+    status_label.config(fg="green" if clicking else "red")
+
+    right_hold_var.set("ON" if ENABLE_RIGHT_HOLD else "OFF")
+    right_hold_label.config(fg="green" if ENABLE_RIGHT_HOLD else "red")
+
 def toggle_clicking():
     """Toggle auto-clicker on or off."""
     global clicking
     clicking = not clicking
 
-    if ENABLE_RIGHT_HOLD:
-        if clicking:
-            mouse.press(Button.right)
-        else:
-            mouse.release(Button.right)
-  
-    status_var.set("RUNNING" if clicking else "STOPPED")
-    status_label.config(fg="green" if clicking else "red")
+    sync_mouse_state()
+    root.after(0, update_ui)
 
 def toggle_right_hold():
     """Toggle hold right-click on or off."""
     global ENABLE_RIGHT_HOLD
     ENABLE_RIGHT_HOLD = not ENABLE_RIGHT_HOLD
 
-    if clicking:
-        if ENABLE_RIGHT_HOLD:
-            mouse.press(Button.right)
-        else:
-            mouse.release(Button.right)
-
-    right_hold_var.set("ON" if ENABLE_RIGHT_HOLD else "OFF")
-    right_hold_label.config(fg="green" if ENABLE_RIGHT_HOLD else "red")
+    sync_mouse_state()
+    root.after(0, update_ui)
 
 def update_interval(*args):
-    """Dynamically updates the click speed when typed into the GUI."""
+    """Update click interval from GUI input."""
     global LEFT_CLICK_INTERVAL
     try:
-        LEFT_CLICK_INTERVAL = float(interval_var.get())
+        val = float(interval_var.get())
+        if val > 0:
+            LEFT_CLICK_INTERVAL = val
     except ValueError:
         pass
 
 def exit_script():
     """Exit auto-clicker."""
-    if clicking and ENABLE_RIGHT_HOLD:
-        mouse.release(Button.right)
+    global clicking, ENABLE_RIGHT_HOLD
+    clicking = False
+    ENABLE_RIGHT_HOLD = False
+
+    sync_mouse_state()
     root.after(0, root.destroy)
     raise Listener.StopException
 
