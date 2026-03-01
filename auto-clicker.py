@@ -59,7 +59,7 @@ hotkeys = {
     '<ctrl>+<shift>+x': exit_script
 }
 
-print("\n--- Auto Clicker ---\n")
+print("\n--- Auto-Clicker ---\n")
 
 print("Listening for hotkeys...")
 print("  Press `Ctrl+Shift+T` to toggle left-clicking.")
