@@ -1,5 +1,5 @@
 import time
-import threading 
+import threading
 from pynput.mouse import Controller, Button
 from pynput.keyboard import GlobalHotKeys
 
@@ -21,26 +21,26 @@ def toggle_clicking():
     """Toggle auto-clicker on or off."""
     global clicking
     clicking = not clicking
-    
+
     if ENABLE_RIGHT_HOLD:
         if clicking:
             mouse.press(Button.right)
         else:
             mouse.release(Button.right)
-            
+  
     print(f"Auto-clicker: {'RUNNING' if clicking else 'STOPPED'}")
 
 def toggle_right_hold():
     """Toggle hold right-click on or off."""
     global ENABLE_RIGHT_HOLD
     ENABLE_RIGHT_HOLD = not ENABLE_RIGHT_HOLD
-    
+
     if clicking:
         if ENABLE_RIGHT_HOLD:
             mouse.press(Button.right)
         else:
             mouse.release(Button.right)
-            
+
     print(f"Right-Hold mode: {'ON' if ENABLE_RIGHT_HOLD else 'OFF'}")
 
 def exit_script():
