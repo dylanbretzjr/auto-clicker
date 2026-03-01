@@ -34,14 +34,14 @@ def sync_mouse_state():
 def update_ui():
     """Update GUI elements based on current state."""
     if clicking:
-        click_toggle_btn.config(text="Left-Click: RUNNING", fg="green")
+        click_toggle_btn.config(text="ON", fg="green")
     else:
-        click_toggle_btn.config(text="Left-Click: STOPPED", fg="red")
+        click_toggle_btn.config(text="OFF", fg="red")
 
     if ENABLE_RIGHT_HOLD:
-        right_hold_toggle_btn.config(text="Right-Hold: ON", fg="green")
+        right_hold_toggle_btn.config(text="ON", fg="green")
     else:
-        right_hold_toggle_btn.config(text="Right-Hold: OFF", fg="red")
+        right_hold_toggle_btn.config(text="OFF", fg="red")
 
 def toggle_clicking():
     """Toggle auto-clicker on or off."""
@@ -52,12 +52,11 @@ def toggle_clicking():
     root.after(0, update_ui)
 
 def gui_toggle_clicking():
-    """
-    Toggle auto-clicker via GUI button with 3-second delay."""
+    """Toggle auto-clicker via GUI button with 3-second delay."""
     if not clicking:
-        click_toggle_btn.config(text="Starting in 3s...", fg="orange")
-        root.after(1000, lambda: click_toggle_btn.config(text="Starting in 2s...", fg="orange"))
-        root.after(2000, lambda: click_toggle_btn.config(text="Starting in 1s...", fg="orange"))
+        click_toggle_btn.config(text="3...", fg="orange")
+        root.after(1000, lambda: click_toggle_btn.config(text="2...", fg="orange"))
+        root.after(2000, lambda: click_toggle_btn.config(text="1...", fg="orange"))
         root.after(3000, toggle_clicking)
     else:
         toggle_clicking()
@@ -97,14 +96,15 @@ root.title("Auto-Clicker")
 root.geometry("500x300")
 root.attributes("-topmost", True)
 
-font_title = ("Helvetica", 16, "bold")
-font_normal = ("Helvetica", 12)
+font_title = ("Helvetica", 18, "bold")
+font_button = ("Helvetica", 16, "bold")
+font_normal = ("Helvetica", 14)
 
 tk.Label(root, text="Minecraft AFK Auto-Clicker", font=font_title).pack(pady=(15, 5))
 
 # Interval input
 interval_frame = tk.Frame(root)
-interval_frame.pack(pady=(15, 0))
+interval_frame.pack(pady=(15, 5))
 tk.Label(interval_frame, text="Left-click interval (seconds):", font=font_normal).pack(side=tk.LEFT)
 
 interval_var = tk.StringVar(value=str(LEFT_CLICK_INTERVAL))
@@ -115,11 +115,13 @@ tk.Entry(interval_frame, textvariable=interval_var, width=5, justify="center").p
 button_frame = tk.Frame(root)
 button_frame.pack(pady=5)
 
-click_toggle_btn = tk.Button(button_frame, text="Left-Click: STOPPED", fg="red", font=font_title, width=18, command=gui_toggle_clicking)
-click_toggle_btn.pack(pady=5)
+tk.Label(button_frame, text="Toggle clicker:", font=font_normal).grid(row=0, column=0, sticky="e", padx=10, pady=5)
+click_toggle_btn = tk.Button(button_frame, text="OFF", fg="red", font=font_button, width=4, command=gui_toggle_clicking)
+click_toggle_btn.grid(row=0, column=1, sticky="w", padx=10, pady=5)
 
-right_hold_toggle_btn = tk.Button(button_frame, text="Right-Hold: OFF", fg="red", font=font_title, width=18, command=toggle_right_hold)
-right_hold_toggle_btn.pack(pady=5)
+tk.Label(button_frame, text="Toggle right-hold:", font=font_normal).grid(row=1, column=0, sticky="e", padx=10, pady=5)
+right_hold_toggle_btn = tk.Button(button_frame, text="OFF", fg="red", font=font_button, width=4, command=toggle_right_hold)
+right_hold_toggle_btn.grid(row=1, column=1, sticky="w", padx=10, pady=5)
 
 # Separator
 tk.Frame(root, height=1, bg="#444444").pack(fill=tk.X, padx=30, pady=10)
@@ -127,8 +129,8 @@ tk.Frame(root, height=1, bg="#444444").pack(fill=tk.X, padx=30, pady=10)
 # Hotkey instructions
 instructions = (
     "Hotkeys:\n"
-    "Ctrl+Shift+T — Toggle Clicker\n"
-    "Ctrl+Shift+R — Toggle Right-Hold\n"
+    "Ctrl+Shift+T — Toggle clicker\n"
+    "Ctrl+Shift+R — Toggle right-hold\n"
     "Ctrl+Shift+X — Exit"
 )
 
