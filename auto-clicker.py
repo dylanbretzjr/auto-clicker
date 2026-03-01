@@ -111,7 +111,7 @@ tk.Label(status_frame, text="Right-Hold Mode:", font=font_normal).grid(row=1, co
 right_hold_label = tk.Label(status_frame, textvariable=right_hold_var, font=font_title, fg="red")
 right_hold_label.grid(row=1, column=1, sticky="w", padx=5, pady=2)
 
-#
+# Separator
 tk.Frame(root, height=1, bg="#444444").pack(fill=tk.X, padx=30, pady=10)
 
 # Hotkey instructions
