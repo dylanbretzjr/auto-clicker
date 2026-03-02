@@ -17,19 +17,26 @@ mouse = Controller()
 def clicker():
     """Background thread to handle clicking."""
     global LEFT_CLICK_INTERVAL
-    while True:
-        if clicking:
-            mouse.click(Button.left, 1)
-            time.sleep(LEFT_CLICK_INTERVAL)
-        else:
-            time.sleep(0.01)
+    last_click_time = 0
+    last_enforce_time = 0
 
-def sync_mouse_state():
-    """Ensure mouse state matches toggle settings."""
-    if clicking and ENABLE_RIGHT_HOLD:
-        mouse.press(Button.right)
-    else:
-        mouse.release(Button.right)
+    while True:
+        current_time = time.time()
+
+        if clicking:
+            if ENABLE_RIGHT_HOLD and (current_time - last_enforce_time) >= 1.0:
+                mouse.press(Button.right)
+                last_enforce_time = current_time
+
+            if (current_time - last_click_time) >= LEFT_CLICK_INTERVAL:
+                mouse.click(Button.left, 1)
+                last_click_time = current_time
+
+                if ENABLE_RIGHT_HOLD:
+                    mouse.press(Button.right)
+                    last_enforce_time = current_time
+
+        time.sleep(0.05)
 
 def update_ui():
     """Update GUI elements based on current state."""
@@ -48,7 +55,9 @@ def toggle_clicking():
     global clicking
     clicking = not clicking
 
-    sync_mouse_state()
+    if not clicking:
+        mouse.release(Button.right)
+
     root.after(0, update_ui)
 
 def gui_toggle_clicking():
@@ -66,7 +75,11 @@ def toggle_right_hold():
     global ENABLE_RIGHT_HOLD
     ENABLE_RIGHT_HOLD = not ENABLE_RIGHT_HOLD
 
-    sync_mouse_state()
+    if not ENABLE_RIGHT_HOLD:
+        mouse.release(Button.right)
+    elif clicking and ENABLE_RIGHT_HOLD:
+        mouse.press(Button.right)
+
     root.after(0, update_ui)
 
 def update_interval(*args):
@@ -85,7 +98,7 @@ def exit_script():
     clicking = False
     ENABLE_RIGHT_HOLD = False
 
-    sync_mouse_state()
+    mouse.release(Button.right)
     root.after(0, root.destroy)
     raise Listener.StopException
 
@@ -100,7 +113,6 @@ font_title = ('Helvetica', 18, 'bold')
 font_button = ('Helvetica', 16, 'bold')
 font_normal = ('Helvetica', 14)
 font_bold = ('Helvetica', 14, 'bold')
-
 
 tk.Label(root, text='Minecraft AFK Auto-Clicker', font=font_title).pack(pady=(15, 0))
 
